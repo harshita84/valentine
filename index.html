@@ -35,7 +35,8 @@ button {
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  width: 120px; /* lock width */
+  width: 120px;
+  transition: all 0.2s ease;
 }
 
 #yesBtn {
@@ -78,6 +79,8 @@ const yesBtn = document.getElementById("yesBtn");
 const message = document.getElementById("message");
 const container = document.querySelector(".container");
 
+let yesScale = 1;
+
 function moveNoButton() {
   const maxX = container.clientWidth - noBtn.offsetWidth;
   const maxY = container.clientHeight - noBtn.offsetHeight;
@@ -87,6 +90,10 @@ function moveNoButton() {
 
   noBtn.style.left = randomX + "px";
   noBtn.style.top = randomY + "px";
+
+  // Grow Yes button every time No is missed
+  yesScale += 0.2;
+  yesBtn.style.transform = `scale(${yesScale})`;
 }
 
 noBtn.addEventListener("mouseenter", moveNoButton);
