@@ -20,6 +20,7 @@ body {
 h1 {
   color: white;
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .container {
@@ -56,54 +57,97 @@ button {
 #message {
   display: none;
   color: white;
-  font-size: 24px;
+  font-size: 28px;
   margin-top: 20px;
+  font-weight: bold;
+}
+
+#mobileWarning {
+  display: none;
+  color: white;
+  font-size: 22px;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  opacity: 0.8;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<h1>Will You Be My Boyfriend? 💖</h1>
+<h1 id="mainQuestion">Will You Be My Boyfriend? 💖</h1>
 
 <div class="container">
   <button id="yesBtn">Yes 💕</button>
   <button id="noBtn">No 😜</button>
 </div>
 
-<div id="message">Yayyyy!! I knew it 🥰💖</div>
+<div id="message">YAYYYY!!! 🥰💖 I knew it!!!</div>
+<div id="mobileWarning">This surprise works only on laptop 💻❤️<br>Please open it on your computer 😌</div>
 
 <script>
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const message = document.getElementById("message");
 const container = document.querySelector(".container");
+const mobileWarning = document.getElementById("mobileWarning");
+const mainQuestion = document.getElementById("mainQuestion");
 
 let yesScale = 1;
 
-function moveNoButton() {
-  const maxX = container.clientWidth - noBtn.offsetWidth;
-  const maxY = container.clientHeight - noBtn.offsetHeight;
-
-  const randomX = Math.random() * maxX;
-  const randomY = Math.random() * maxY;
-
-  noBtn.style.left = randomX + "px";
-  noBtn.style.top = randomY + "px";
-
-  // Grow Yes button every time No is missed
-  yesScale += 0.2;
-  yesBtn.style.transform = `scale(${yesScale})`;
+// Detect mobile
+function isMobile() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
 }
 
-noBtn.addEventListener("mouseenter", moveNoButton);
+if (isMobile()) {
+  document.querySelector(".container").style.display = "none";
+  mainQuestion.style.display = "none";
+  mobileWarning.style.display = "block";
+} else {
 
-yesBtn.addEventListener("click", function() {
-  message.style.display = "block";
-  yesBtn.style.display = "none";
-  noBtn.style.display = "none";
-});
-</script>
+  function moveNoButton() {
+    const maxX = container.clientWidth - noBtn.offsetWidth;
+    const maxY = container.clientHeight - noBtn.offsetHeight;
 
-</body>
-</html>
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+
+    // Grow Yes button
+    yesScale += 0.15;
+    yesBtn.style.transform = `scale(${yesScale})`;
+  }
+
+  noBtn.addEventListener("mouseenter", moveNoButton);
+
+  yesBtn.addEventListener("click", function() {
+    message.style.display = "block";
+    noBtn.style.display = "none";
+    yesBtn.style.display = "none";
+    createConfetti();
+  });
+}
+
+// Confetti Function
+function createConfetti() {
+  for (let i = 0; i < 150; i++) {
+    const confetti = document.createElement(
